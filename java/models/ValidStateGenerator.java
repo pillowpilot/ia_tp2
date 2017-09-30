@@ -114,11 +114,11 @@ public class ValidStateGenerator{
     public static void main(String[] args){
 	test(2);
 	test(3);
-	ValidStateGenerator.get(4).print();
+	System.out.println(ValidStateGenerator.get(4));
 	// for rank=5 may take a while...
     }
     private static void test(int rank){
 	ValidStateGenerator gen = new ValidStateGenerator(rank);	
-	gen.get().print();
+	System.out.println(gen.get());
     }
 }

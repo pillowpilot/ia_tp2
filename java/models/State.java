@@ -19,6 +19,11 @@ public class State{
 	size = rank*rank;
 	state = new SquareMatrix(size);
     }
+    State(State other){
+	this.rank = other.rank;
+	this.size = other.size;
+	this.state = new SquareMatrix(other.state);
+    }
     public int getRank(){ return rank; }
     public int getMaxValue(){ return rank*rank+1; }
 
@@ -69,6 +74,25 @@ public class State{
 	    else if( !checkColumn(i) ) return false;
 	return true;
     }
+    public String toString(){
+	StringBuilder output = new StringBuilder();
+
+	output.append(String.format("Rank = %d%n", rank));
+	final int width = (int)Math.log10(size*size)+2;
+	final String format = "%"+width+"d";
+	for(int i = 0; i < size; i++){
+	    if( i % rank == 0 )
+		output.append(horizontalLine(width));
+	    for(int j = 0; j < size; j++){
+		if( j % rank == 0 )
+		    output.append("|");
+		output.append(String.format(format, get(i, j)));
+	    }
+	    output.append(String.format("|%n"));
+	}
+	output.append(horizontalLine(width));
+	return output.toString();
+    }
     public void print(){
 	System.err.println("Rank = " + rank);
 
@@ -84,6 +108,15 @@ public class State{
 	    System.err.println("|");
 	}
 	printHorizontalLine(width);
+    }
+    private String horizontalLine(int width){
+	StringBuilder output = new StringBuilder();
+	final int times = width*size+size/rank;
+	for(int i = 0; i < times; i++){
+	    output.append("-");
+	}
+	output.append(String.format("%n"));
+	return output.toString();
     }
     private void printHorizontalLine(int width){
 	final int times = width*size+size/rank;
@@ -188,9 +221,9 @@ public class State{
     }
     private static void test(int rank){
 	State s = new State(rank);
-	s.print();
+	System.out.println(s);
 	s.randomLoad(5);
-	s.print();
+	System.out.println(s);
 	for(Integer v: s.getRow(0)){
 	    System.out.print(v + " ");
 	}
@@ -222,6 +255,14 @@ class SquareMatrix{
 	}
 
 	this.n = n;
+    }
+    SquareMatrix(SquareMatrix other){
+	this.n = other.n;
+	this.data = new Vector<Vector<Integer>>();
+	for(Vector<Integer> other_row: other.data){
+	    Vector<Integer> row = new Vector<Integer>(other_row);
+	    this.data.add(row);
+	}	
     }
 
     public Integer get(int row, int column) throws IndexOutOfBoundsException{
