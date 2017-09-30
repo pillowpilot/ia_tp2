@@ -115,7 +115,7 @@ public class ValidStateGenerator{
 	test(2);
 	test(3);
 	System.out.println(ValidStateGenerator.get(4));
-	// for rank=5 may take a while...
+	System.out.println(ValidStateGenerator.get(5));	// rank=5 may take a while...
     }
     private static void test(int rank){
 	ValidStateGenerator gen = new ValidStateGenerator(rank);	

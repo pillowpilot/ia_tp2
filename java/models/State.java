@@ -2,12 +2,13 @@
 package models;
 
 import java.lang.*;
+import java.io.Serializable;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.Collections;
 import java.util.Vector;
 import java.util.Iterator;
 
-public class State{
+public class State implements Serializable{
     private SquareMatrix state;
     private int rank;
     private int size;
@@ -24,8 +25,30 @@ public class State{
 	this.size = other.size;
 	this.state = new SquareMatrix(other.state);
     }
+    public static State fromString(String s) throws IllegalArgumentException{
+	final String[] values = s.split(" ");
+	final int rank = (int) Math.sqrt(Math.sqrt(values.length));
+	if( rank*rank*rank*rank != values.length )
+	    throw new IllegalArgumentException("String provided is not a valid state. There is not integer rank such that rank^4 = tokens.");
+
+	State state = new State(rank);
+	int row, column;
+	row = column = 0;
+	for(String token: values){
+	    int value;
+	    if( token.equals("_") ) value = 0;
+	    else value = Integer.parseInt(token);
+	    state.set(row, column, value);
+	    column++;
+	    if( column == state.size ){
+		column = 0;
+		row++;
+	    }
+	}
+	return state;
+    }
     public int getRank(){ return rank; }
-    public int getMaxValue(){ return rank*rank+1; }
+    public int getMaxValue(){ return rank*rank; }
 
     public int get(int row, int column) throws IndexOutOfBoundsException{
 	if( !(0<=row&&row<size&&0<=column&&column<size) )
@@ -79,14 +102,19 @@ public class State{
 
 	output.append(String.format("Rank = %d%n", rank));
 	final int width = (int)Math.log10(size*size)+2;
-	final String format = "%"+width+"d";
+	final String formatValue = "%"+width+"d";
+	final String formatEmpty = "%"+width+"c";
 	for(int i = 0; i < size; i++){
 	    if( i % rank == 0 )
 		output.append(horizontalLine(width));
 	    for(int j = 0; j < size; j++){
 		if( j % rank == 0 )
 		    output.append("|");
-		output.append(String.format(format, get(i, j)));
+		final int value = get(i, j);
+		if( value == 0 )
+		    output.append(String.format(formatEmpty, '_'));
+		else
+		    output.append(String.format(formatValue, get(i, j)));
 	    }
 	    output.append(String.format("|%n"));
 	}
@@ -94,20 +122,7 @@ public class State{
 	return output.toString();
     }
     public void print(){
-	System.err.println("Rank = " + rank);
-
-	final int width = (int)Math.log10(size*size)+2;
-	final String format = "%"+width+"d";
-	for(int i = 0; i < size; i++){
-	    if( i % rank == 0 ) printHorizontalLine(width);
-	    for(int j = 0; j < size; j++){
-		if( j % rank == 0 )
-		    System.err.print("|");
-		System.err.format(format, get(i, j));
-	    }
-	    System.err.println("|");
-	}
-	printHorizontalLine(width);
+	System.out.println(this);
     }
     private String horizontalLine(int width){
 	StringBuilder output = new StringBuilder();
@@ -117,13 +132,6 @@ public class State{
 	}
 	output.append(String.format("%n"));
 	return output.toString();
-    }
-    private void printHorizontalLine(int width){
-	final int times = width*size+size/rank;
-	for(int i = 0; i < times; i++){
-	    System.err.print("-");
-	}
-	System.err.println();
     }
     public void randomLoad(int emptyValues){
 	for(int i = 0; i < size; i++){
@@ -142,7 +150,7 @@ public class State{
 	}
     }
     public boolean checkVirtualLine(Iterable<Integer> virtualLine){
-	boolean[] used = new boolean[getMaxValue()];
+	boolean[] used = new boolean[getMaxValue()+1];
 	for(Integer value: virtualLine)
 	    if( used[value] ) return false;
 	    else used[value] = true;
@@ -240,7 +248,7 @@ public class State{
     }
 }
 
-class SquareMatrix{
+class SquareMatrix implements Serializable{
     private Vector<Vector<Integer>> data;
     private final int n;
 
