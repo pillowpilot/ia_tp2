@@ -114,7 +114,7 @@ public class ValidStateGenerator{
     public static void main(String[] args){
 	test(2);
 	test(3);
-	System.out.println(ValidStateGenerator.get(4));
+	System.out.println(ValidStateGenerator.get(5));
 	// for rank=5 may take a while...
     }
     private static void test(int rank){
