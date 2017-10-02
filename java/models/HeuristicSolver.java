@@ -51,14 +51,21 @@ public class HeuristicSolver implements SudokuSolver{
 	    }
 	    Collections.sort(variables);
 
-	    for(Variable variable: variables){
+	    /*for(Variable variable: variables){
 		Position position = variable.position;
 		for(int value: validValues.get(position)){
 		    node.set(position.row, position.column, value);
 		    if( bt(node) ) return true;
 		}
 		node.set(position.row, position.column, 0);
+		}*/
+	    
+	    Position position = variables.get(0).position;
+	    for(int value: validValues.get(position)){
+		node.set(position.row, position.column, value);
+		if( bt(node) ) return true;
 	    }
+		
 	    return false;
 	}
     }
@@ -174,11 +181,22 @@ public class HeuristicSolver implements SudokuSolver{
 	    "_ _ _ _ _ _ _ _ _ " +
 	    "_ 7 _ 8 _ _ 6 3 4 " +
 	    "_ 6 _ _ 4 3 7 _ _ ";
+	final String data4 =
+	    "_ _ _ _ _ 5 2 _ _ " +
+	    "_ 5 _ _ _ _ _ _ _ " +
+	    "_ _ _ 1 3 _ _ _ 7 " +
+	    "_ _ 4 _ _ _ _ _ 6 " +
+	    "_ _ _ 5 _ _ _ _ _ " +
+	    "_ _ _ _ _ 3 _ _ _ " +
+	    "_ _ _ 3 _ _ _ _ _ " +
+	    "_ _ 2 _ 9 _ _ 3 _ " +
+	    "_ _ _ _ 2 4 _ 8 _ ";
 	    
 
 	test(data1);
 	test(data2);
 	test(data3);
+	test(data4);
     }
     private static void test(String data){
 	State state = State.fromString(data);
