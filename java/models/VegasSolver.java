@@ -1,6 +1,16 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package models;
 
-public class BacktrackingSolver implements SudokuSolver{
+/**
+ *
+ * @author Tadashi
+ */
+public class VegasSolver implements SudokuSolver{
     
     private long visitedNodes = 0;
     private long startTime = 0;
@@ -42,8 +52,19 @@ public class BacktrackingSolver implements SudokuSolver{
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
                 if(state.get(i, j) == State.EMPTY){
-                    for(int k = 1; k <= n; k++){
-                        state.set(i, j, k);
+                    int kk[] = new int[n];
+                    for(int k = 0; k < n; k++){
+                        kk[k] = k + 1;
+                    }
+                    for(int k = 0; k < n; k++){
+                        int r = (int)(Math.random() * n);
+                        int aux = kk[k];
+                        kk[k] = kk[r];
+                        kk[r] = aux;
+                    }
+                    
+                    for(int k = 0; k < n; k++){
+                        state.set(i, j, kk[k]);
                         long solutionNumber = backtracking(state, findAllSolutions);
                         totalSolutionNumber += solutionNumber;
                         if(solutionNumber > 0 && !findAllSolutions){
@@ -71,4 +92,5 @@ public class BacktrackingSolver implements SudokuSolver{
         }
         return true;
     }
+    
 }

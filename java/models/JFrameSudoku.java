@@ -98,7 +98,7 @@ public class JFrameSudoku extends javax.swing.JFrame {
                     gImage.setColor(Color.black);
                     str = "" + problemBoard.get(i, j);
                 }else if(solutionBoard != null){
-                    gImage.setColor(Color.blue);
+                    gImage.setColor(Color.red);
                     str = "" + solutionBoard.get(i, j);
                 }
                 if(str.length() <= 1){
@@ -122,7 +122,6 @@ public class JFrameSudoku extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -134,6 +133,7 @@ public class JFrameSudoku extends javax.swing.JFrame {
         jRadioButton4 = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
+        jRadioButton1 = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -176,6 +176,9 @@ public class JFrameSudoku extends javax.swing.JFrame {
 
         jTextField4.setText("30");
 
+        buttonGroup2.add(jRadioButton1);
+        jRadioButton1.setText("Las Vegas");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -189,6 +192,7 @@ public class JFrameSudoku extends javax.swing.JFrame {
                         .addComponent(jTextField4))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButton1)
                             .addComponent(jRadioButton4)
                             .addComponent(jRadioButton3)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -221,10 +225,12 @@ public class JFrameSudoku extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
+                .addContainerGap())
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -319,7 +325,7 @@ public class JFrameSudoku extends javax.swing.JFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 152, Short.MAX_VALUE)))
+                        .addGap(0, 129, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -327,15 +333,18 @@ public class JFrameSudoku extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        BacktrackingSolver b = new BacktrackingSolver();
+        SudokuSolver solver;
         if(jRadioButton3.isSelected()){
-            solutionBoard = b.solve(problemBoard, false);
-            drawBoard();
-            jLabel7.setText("" + (b.getExecutionTime() / 1000000.0));
-            jLabel8.setText("" + b.getVisitedNodes());
+            solver = new BacktrackingSolver();
         }else if(jRadioButton4.isSelected()){
-            
+            solver = new HeuristicSolver();
+        }else{
+            solver = new VegasSolver();
         }
+        solutionBoard = solver.solve(problemBoard, false);
+        drawBoard();
+        jLabel7.setText("" + (solver.getExecutionTime() / 1000000.0));
+        jLabel8.setText("" + solver.getVisitedNodes());
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -396,7 +405,6 @@ public class JFrameSudoku extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -410,6 +418,7 @@ public class JFrameSudoku extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JTextField jTextField1;

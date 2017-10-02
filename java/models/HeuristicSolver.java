@@ -51,22 +51,14 @@ public class HeuristicSolver implements SudokuSolver{
 	    }
 	    Collections.sort(variables);
 
-	    /*for(Variable variable: variables){
-		Position position = variable.position;
-		for(int value: validValues.get(position)){
-		    node.set(position.row, position.column, value);
-		    if( bt(node) ) return true;
-		}
-		node.set(position.row, position.column, 0);
-		}*/
-	    
-	    Position position = variables.get(0).position;
-	    for(int value: validValues.get(position)){
-		node.set(position.row, position.column, value);
-		if( bt(node) ) return true;
-	    }
-		
-	    return false;
+            Position position = variables.get(0).position;
+            for(int value: validValues.get(position)){
+                node.set(position.row, position.column, value);
+                if( bt(node) ) return true;
+            }
+            node.set(position.row, position.column, 0);
+
+            return false;
 	}
     }
     private State fillNakedSimples(State initial){	
